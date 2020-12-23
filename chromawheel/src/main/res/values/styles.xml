@@ -1,0 +1,15 @@
+<resources>
+
+    <declare-styleable name="ChromaWheelView">
+        <attr name="numberOfChromaColors" format="integer" />
+        <attr name="spaceBetweenColorBlocks" format="float" />
+        <attr name="bigCircleRadius" format="float" />
+        <attr name="smallCircleRadius" format="float" />
+        <attr name="colorBlockStrokeColor" format="integer" />
+        <attr name="useDarkerColorBlockStrokeColor" format="integer" />
+        <attr name="selectedColor" format="color" />
+        <attr name="overlayShadowColor" format="color" />
+        <attr name="animationDuration" format="integer" />
+    </declare-styleable>
+
+</resources>
