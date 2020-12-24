@@ -6,7 +6,7 @@
         <attr name="bigCircleRadius" format="float" />
         <attr name="smallCircleRadius" format="float" />
         <attr name="colorBlockStrokeColor" format="integer" />
-        <attr name="useDarkerColorBlockStrokeColor" format="integer" />
+        <attr name="strokeColorDifference" format="integer" />
         <attr name="selectedColor" format="color" />
         <attr name="overlayShadowColor" format="color" />
         <attr name="animationDuration" format="integer" />

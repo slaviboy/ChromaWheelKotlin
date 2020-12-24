@@ -188,7 +188,7 @@ class ChromaWheelView : View {
         bigCircleRadius = attributes.getFloat(R.styleable.ChromaWheelView_bigCircleRadius, bigCircleRadius)
         smallCircleRadius = attributes.getFloat(R.styleable.ChromaWheelView_smallCircleRadius, smallCircleRadius)
         colorBlockStrokeColor = attributes.getColor(R.styleable.ChromaWheelView_colorBlockStrokeColor, colorBlockStrokeColor)
-        strokeColorDifference = attributes.getInteger(R.styleable.ChromaWheelView_useDarkerColorBlockStrokeColor, strokeColorDifference)
+        strokeColorDifference = attributes.getInteger(R.styleable.ChromaWheelView_strokeColorDifference, strokeColorDifference)
         selectedColor = attributes.getColor(R.styleable.ChromaWheelView_selectedColor, selectedColor)
         overlayShadowColor = attributes.getColor(R.styleable.ChromaWheelView_overlayShadowColor, overlayShadowColor)
         animationDuration = attributes.getInteger(R.styleable.ChromaWheelView_animationDuration, animationDuration.toInt()).toLong()
