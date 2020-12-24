@@ -295,7 +295,7 @@ class ChromaWheelView : View {
 
         // get the (centerX, -radius)
         val x = centerX
-        val y = -2 * radius
+        val y = centerY - 2 * bigCircleActualRadius
 
         // get the rotated point
         val rotatedPoint = rotate(centerX, centerY, x, y, degreesPerColorBlock)
