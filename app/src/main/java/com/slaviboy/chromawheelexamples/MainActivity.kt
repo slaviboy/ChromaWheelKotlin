@@ -22,6 +22,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        // destroy the animation to prevent memory leak
+        chromaWheelView.destroyAnimation()
+    }
+
     fun changeColor(view: View) {
 
         val colorRange = (0..255)

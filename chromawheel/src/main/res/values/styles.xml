@@ -10,6 +10,7 @@
         <attr name="selectedColor" format="color" />
         <attr name="overlayShadowColor" format="color" />
         <attr name="animationDuration" format="integer" />
+        <attr name="useStrokeForFirstBlockOnly" format="boolean" />
     </declare-styleable>
 
 </resources>

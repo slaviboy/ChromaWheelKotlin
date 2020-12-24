@@ -1,6 +1,5 @@
 package com.slaviboy.chromawheel
 
-import android.animation.Animator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -117,7 +116,7 @@ class ChromaWheelView : View {
 
     lateinit var onColorSelected:
             ((v: View, clickedBlockIndex: Int) -> Unit) // listener called when the user selects new chroma color from the wheel
-    lateinit var animator: ValueAnimator                // animator that is used to rotate the wheel
+    var animator: ValueAnimator?                        // animator that is used to rotate the wheel
     var startAngle: Float                               // the angle from which to start drawing the color blocks
     var topColorBlockIndex: Int                         // the index of the color block that should be drawn on top of the overlay shadow
     var animationDuration: Long                         // the duration of the rotation animation in ms
@@ -168,6 +167,7 @@ class ChromaWheelView : View {
         animationDuration = 1000L
         fingerDownTime = 0L
         isMoved = false
+        animator = null
 
         overlayShadowPath = Path()
         colorBlockPath = Path()
@@ -192,6 +192,7 @@ class ChromaWheelView : View {
         selectedColor = attributes.getColor(R.styleable.ChromaWheelView_selectedColor, selectedColor)
         overlayShadowColor = attributes.getColor(R.styleable.ChromaWheelView_overlayShadowColor, overlayShadowColor)
         animationDuration = attributes.getInteger(R.styleable.ChromaWheelView_animationDuration, animationDuration.toInt()).toLong()
+        useStrokeForFirstBlockOnly = attributes.getBoolean(R.styleable.ChromaWheelView_useStrokeForFirstBlockOnly, useStrokeForFirstBlockOnly)
 
         attributes.recycle()
     }
@@ -455,13 +456,13 @@ class ChromaWheelView : View {
                                 }
                             }
 
-                            if ((!::animator.isInitialized) || !animator.isRunning) {
+                            if ((animator == null) || !(animator!!.isRunning)) {
 
                                 topColorBlockIndex = clickedBlockIndex
 
                                 // make sure the duration of the animation is bigger than zero, before creating it
                                 if (animationDuration <= 0L) {
-                                    onAnimationEnd(rotateDistance, clickedBlockIndex)
+                                    finishRotation(rotateDistance, clickedBlockIndex)
                                 } else {
 
                                     // store previous stroke color, and remove it while the animation is running and the wheel is spinning
@@ -473,23 +474,23 @@ class ChromaWheelView : View {
                                     }
 
                                     animator = ValueAnimator.ofFloat(startAngle, startAngle + rotateDistance * degreesPerColorPack)
-                                    animator.addUpdateListener { animation ->
+                                    animator!!.addUpdateListener { animation ->
 
                                         // update the start angle and force redrawing of the view
                                         // that way the wheel is rotated
                                         startAngle = animation.animatedValue as Float
                                         invalidate()
                                     }
-                                    animator.doOnEnd {
+                                    animator!!.doOnEnd {
 
                                         // restore values
                                         colorBlockStrokeColor = previousColorBlockStrokeColor
                                         strokeColorDifference = previousStrokeColorDifference
 
-                                        onAnimationEnd(rotateDistance, clickedBlockIndex)
+                                        finishRotation(rotateDistance, clickedBlockIndex)
                                     }
-                                    animator.duration = animationDuration
-                                    animator.start()
+                                    animator!!.duration = animationDuration
+                                    animator!!.start()
                                 }
                             }
                         }
@@ -507,7 +508,25 @@ class ChromaWheelView : View {
         return true
     }
 
-    fun onAnimationEnd(rotateDistance: Int, clickedBlockIndex: Int) {
+    /**
+     * Call this method to destroy the animator, that way preventing a memory leak in case
+     * the activity or fragment is destroyed before the animation has finished.
+     */
+    fun destroyAnimation() {
+
+        if (animator != null) {
+            animator!!.cancel()
+            animator = null
+        }
+    }
+
+    /**
+     * Method called to finish the rotation when the animation is ended or if the animation
+     * duration is 0, and this method is called immediately
+     * @param rotateDistance value showing how much to rotate the list with colors and the direction if its positive clockwise and if its negative anti-clockwise
+     * @param clickedBlockIndex index of the block that was clicked
+     */
+    fun finishRotation(rotateDistance: Int, clickedBlockIndex: Int) {
 
         topColorBlockIndex = 0
         startAngle = -degreesPerColorBlock / 2f
